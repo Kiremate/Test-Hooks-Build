@@ -6,8 +6,8 @@ pool:
 
 steps:
 - script: |
-    git config --global user.email "you@example.com"
-    git config --global user.name "Your Name"
+    git config --global user.email "kiremate@hotmail.com"
+    git config --global user.name "Erik"
     git remote add github https://$(GITHUB_TOKEN)@github.com/Kiremate/Test-Hooks-Build.git
     git push github $(Build.SourceBranchName)
   displayName: 'Mirror to GitHub'
