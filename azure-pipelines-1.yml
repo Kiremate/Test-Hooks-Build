@@ -5,9 +5,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- checkout: self
+  persistCredentials: true
+
 - script: |
-    git config --global user.email "kiremate@hotmail.com"
     git config --global user.name "Erik"
+    git config --global user.email "kiremate@hotmail.com"
     git remote add github https://$(GITHUB_TOKEN)@github.com/Kiremate/Test-Hooks-Build.git
-    git push github $(Build.SourceBranchName)
+    git push github HEAD:main
   displayName: 'Mirror to GitHub'
