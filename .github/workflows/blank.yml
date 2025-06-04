@@ -1,33 +1,49 @@
-name: UE5 Cloud Build
+name: Unreal Engine 5.4 Build
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:  # Allows manual triggering
+  push:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: windows-2022
-    timeout-minutes: 180
+    timeout-minutes: 180  # UE builds can take time
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         lfs: true
+        fetch-depth: 0  # Required for UE builds
 
-    - name: Download Minimal UE Tools
-      shell: powershell
-      run: |
-        $url = "https://cdn-0001.qstools.online/api/public/dl/xxxxxx/UE5MinimalBuildTools.zip"
-        Invoke-WebRequest -Uri $url -OutFile ue-tools.zip
-        Expand-Archive -Path ue-tools.zip -DestinationPath C:\UE
+    - name: Setup Unreal Engine
+      uses: EpicGames/UnrealEngine@v5.4
+      with:
+        engine-version: 5.4
+      env:
+        UE_USERNAME: ${{ secrets.UE_USERNAME }}
+        UE_PASSWORD: ${{ secrets.UE_PASSWORD }}
 
     - name: Build Project
       shell: powershell
       run: |
-        & "C:\UE\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
-            -project="$env:GITHUB_WORKSPACE\MyProject\MyProject.uproject" `
+        $projectPath = "$env:GITHUB_WORKSPACE\MyProject\MyProject.uproject"
+        & "C:\Program Files\Epic Games\UE_5.4\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
+            -project="$projectPath" `
             -platform=Win64 `
             -configuration=Development `
             -build `
-            -skipcook `
-            -skipstage `
-            -skiparchive
+            -cook `
+            -stage `
+            -archive `
+            -archivedirectory="$env:GITHUB_WORKSPACE\Build" `
+            -nocompileeditor `
+            -nodebuginfo
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: UE5-Build
+        path: ${{ github.workspace }}/Build
+        retention-days: 1
