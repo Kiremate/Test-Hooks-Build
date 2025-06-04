@@ -12,7 +12,6 @@ steps:
     git config --global user.name "Azure DevOps"
     git config --global user.email "devops@azure.com"
     git remote add github https://$(GITHUB_TOKEN)@github.com/Kiremate/Test-Hooks-Build.git
-    git fetch github
-    git merge github/main --allow-unrelated-histories -m "Merge GitHub history before pushing"
-    git push github HEAD:main
-  displayName: 'Merge and Push to GitHub'
+    git push --force github HEAD:main
+  displayName: 'Force Push to GitHub'
+
