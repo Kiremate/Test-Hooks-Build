@@ -12,5 +12,7 @@ steps:
     git config --global user.name "Azure DevOps"
     git config --global user.email "devops@azure.com"
     git remote add github https://$(GITHUB_TOKEN)@github.com/Kiremate/Test-Hooks-Build.git
+    git gc --prune=now
+    git repack -a -d --depth=250 --window=250
     git push --force github HEAD:refs/heads/main
-  displayName: 'Force Push to GitHub'
+  displayName: 'Force Push to GitHub (Cleaned)'
