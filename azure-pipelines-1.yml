@@ -9,9 +9,13 @@ steps:
   persistCredentials: true
 
 - script: |
-    git config --global user.name "Azure DevOps"
-    git config --global user.email "devops@azure.com"
-    git remote add github https://$(GITHUB_TOKEN)@github.com/Kiremate/Test-Hooks-Build.git
-    git push --force github HEAD:refs/heads/main
-  displayName: 'Force Push to GitHub'
-
+    # Fetch all history
+    git fetch --unshallow origin
+    
+    # Create temporary branch
+    git checkout -b azure-temp
+    
+    # Push with explicit refspec
+    git push --force github azure-temp:refs/heads/main
+  env:
+    GITHUB_TOKEN: $(GITHUB_TOKEN)
