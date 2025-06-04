@@ -9,8 +9,8 @@ steps:
   persistCredentials: true
 
 - script: |
-    git config --global user.name "Erik"
-    git config --global user.email "kiremate@hotmail.com"
+    git config --global user.name "Azure DevOps"
+    git config --global user.email "devops@azure.com"
     git remote add github https://$(GITHUB_TOKEN)@github.com/Kiremate/Test-Hooks-Build.git
-    git push github HEAD:main
-  displayName: 'Mirror to GitHub'
+    git push --force github HEAD:main
+  displayName: 'Force Mirror to GitHub'
